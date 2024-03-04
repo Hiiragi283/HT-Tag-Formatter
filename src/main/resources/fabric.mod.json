@@ -3,7 +3,7 @@
   "id": "ht_tag_formatter",
   "version": "${version}",
   "name": "HT Tag Formatter",
-  "description": "A simple Minecraft mod for Fabric/Quilt that provides Material System and Tag Sync",
+  "description": "Convert Conventional Tag format into new one; Part Tag format",
   "authors": [
     "Hiiragi283"
   ],
