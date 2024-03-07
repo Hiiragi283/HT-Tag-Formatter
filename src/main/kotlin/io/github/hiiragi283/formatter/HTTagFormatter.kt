@@ -1,5 +1,6 @@
 package io.github.hiiragi283.formatter
 
+import net.fabricmc.loader.api.FabricLoader
 import net.fabricmc.loader.api.entrypoint.PreLaunchEntrypoint
 import org.apache.logging.log4j.Level
 import org.apache.logging.log4j.LogManager
@@ -12,6 +13,11 @@ object HTTagFormatter : PreLaunchEntrypoint {
     @JvmStatic
     fun log(message: String, level: Level = Level.INFO) {
         logger.log(level, "[$MOD_NAME] $message")
+    }
+
+    @JvmStatic
+    fun debugLog(message: String, level: Level = Level.INFO) {
+        if (FabricLoader.getInstance().isDevelopmentEnvironment) log(message, level)
     }
 
     override fun onPreLaunch() {
@@ -98,6 +104,6 @@ object HTTagFormatter : PreLaunchEntrypoint {
         val PLATE = buildTagFormatRule("plate/forge") { prefix = "plates/" }
 
         @JvmField
-        val RAW_ORE = buildTagFormatRule("raw_ore") { prefix = "raw_materials/" }
+        val RAW_ORE = buildTagFormatRule("raw_ore/forge") { prefix = "raw_materials/" }
     }
 }

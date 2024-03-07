@@ -1,6 +1,7 @@
 package io.github.hiiragi283.formatter
 
 import net.minecraft.util.Identifier
+import org.apache.logging.log4j.Level
 
 fun buildTagFormatRule(name: String, builderAction: HTTagFormatRule.Builder.() -> Unit): HTTagFormatRule =
     HTTagFormatRule.Builder(name).apply(builderAction).let(::HTTagFormatRule)
@@ -17,8 +18,14 @@ class HTTagFormatRule internal constructor(builder: Builder) {
 
     init {
         check(hasEither) { "Rule; $name must have either prefix or suffix!" }
-        if (hasBoth) bothRules.add(this) else eitherRules.add(this)
+        if (hasBoth) {
+            if (!bothRules.add(this)) HTTagFormatter.log("TagFormatRule named $name overridden!", Level.WARN)
+        } else {
+            if (!eitherRules.add(this)) HTTagFormatter.log("TagFormatRule named $name overridden!", Level.WARN)
+        }
     }
+
+    //    Conventional Tag -> Part Tag    //
 
     fun getResult(id: Identifier): Result = getResult(id.path)
 
@@ -36,11 +43,21 @@ class HTTagFormatRule internal constructor(builder: Builder) {
         Result.PREFIX -> path.removePrefix(prefix!!)
         Result.SUFFIX -> path.removeSuffix(suffix!!)
         Result.NONE -> path
-    }.let { "$name/$it" }.apply { HTTagFormatter.log("Converted; $path -> $this") }
+    }.let { "$name/$it" }.apply { HTTagFormatter.debugLog("Converted; $path -> $this") }
 
     fun canConvert(id: Identifier): Boolean = canConvert(id.path)
 
     fun canConvert(path: String): Boolean = getResult(path) != Result.NONE
+
+    //    Material + Rule -> Part Tag    //
+
+    fun combine(name: String): String = StringBuilder().apply {
+        prefix?.let(this::append)
+        append(name)
+        suffix?.let { removeSuffix("s") }?.let(this::append)
+    }.toString()
+
+    fun combineToId(name: String, namespace: String = "part"): Identifier = Identifier(namespace, combine(name))
 
     //    Any    //
 
