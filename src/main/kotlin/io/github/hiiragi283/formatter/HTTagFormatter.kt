@@ -1,23 +1,17 @@
 package io.github.hiiragi283.formatter
 
 import net.fabricmc.loader.api.entrypoint.PreLaunchEntrypoint
-import org.apache.logging.log4j.Level
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.Logger
 
 object HTTagFormatter : PreLaunchEntrypoint {
     private const val MOD_NAME: String = "HT Tag Formatter"
-    private val logger: Logger = LogManager.getLogger(MOD_NAME)
-
-    @JvmStatic
-    fun log(message: String, level: Level = Level.INFO) {
-        logger.log(level, "[$MOD_NAME] $message")
-    }
+    val LOGGER: Logger = LogManager.getLogger(MOD_NAME)
 
     override fun onPreLaunch() {
         Fabric
         Forge
-        log("HT Tag Formatter initialized!")
+        LOGGER.info("HT Tag Formatter initialized!")
     }
 
     object Fabric {
@@ -98,6 +92,6 @@ object HTTagFormatter : PreLaunchEntrypoint {
         val PLATE = buildTagFormatRule("plate/forge") { prefix = "plates/" }
 
         @JvmField
-        val RAW_ORE = buildTagFormatRule("raw_ore") { prefix = "raw_materials/" }
+        val RAW_ORE = buildTagFormatRule("raw_ore/forge") { prefix = "raw_materials/" }
     }
 }

@@ -62,10 +62,11 @@ loom {
     runs {
         getByName("client") {
             programArg("--username=Developer")
-            vmArg("-Dmixin.debug.export=true")
+            vmArgs("-Dmixin.debug.export=true", "-Dorg.apache.logging.log4j.level=DEBUG")
         }
         getByName("server") {
             runDir = "server"
+            vmArgs("-Dmixin.debug.export=true", "-Dorg.apache.logging.log4j.level=DEBUG")
         }
     }
 }
